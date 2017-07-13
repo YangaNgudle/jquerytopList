@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Title Here</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    
+    <script src="assets/js/jquery-2.1.4.min.js"></script>
+    <script src="assets/js/bootstrap.js"></script>
+</head>
+<body>
+ <div class="container">
+   <div class="jumbotron">
+     <h1 class="text-center">My Rapper Top 10.</h1>
+
+     <ul id="my_top_10">
+     	
+     </ul>
+
+     <input id="rapper_input" type="text" class="form-input"> <button id="add_rapper" class="btn-primary">Add</button>
+   </div>	
+ </div>
+</body>
+<script>
+	$(document).ready(function() {
+	  // Rapper list
+	  var list = [];
+
+	 $('#my_top_10').on('click', '.remove', function(e){
+	 	list.splice(e.target.id - 1, 1);
+        $(this).closest('.rapper_item').remove();
+        generateList();
+      });
+
+	  // Functions 
+	  function addRapper(name) {
+        list.push(name);
+	  }
+
+	  function generateList() {
+        $('#my_top_10 li').remove();
+        for(var i= 0; i < list.length; i++) {
+          $('#my_top_10').append(
+          	"<li class='rapper_item'> " +(i + 1)+""+list[i]+" <button id='"+(i + 1)+"' class='remove'>Remove</button> <button id='"+(i + 1)+"' class='moveUp'>Move Up</button> <button id='"+(i + 1)+"' class='moveDown'>Move Down</button></li>");
+	    }
+	  }
+
+	  $('#my_top_10').on('click', '.moveUp', function(e) {
+	  	// 
+	  	console.log(list);
+	  	console.log((e.target.id -1)); // The index of the current in the array
+	  	console.log((e.target.id - 2)); // move up value
+	  	
+	  	if ((e.target.id - 1) == -1 || (e.target.id - 2) == -1){
+	  	  return true;
+	  	}
+
+	  	var tempHolder = list[e.target.id - 2];
+
+	  	list[e.target.id - 2] = list[e.target.id - 1];
+	  	list[e.target.id - 1] = tempHolder;
+
+	  	generateList();
+	  })
+
+	  $('#my_top_10').on('click', '.moveDown', function(e) {
+	  	console.log(list);
+	  	console.log((parseInt(e.target.id))); // The index of the current in the array
+	  	console.log(parseInt(e.target.id) + 1); // move up value
+	  	if (list[e.target.id - 1] == undefined || list[e.target.id] == undefined){
+	  	  return true;
+	  	}
+
+	  	var tempHolder = list[e.target.id - 1];
+
+	  	list[e.target.id - 1] = list[e.target.id];
+	  	list[e.target.id] = tempHolder;
+
+	  	generateList();
+	  })
+
+	  $('#add_rapper').click(function() {
+	  	var rapper = $('#rapper_input').val();
+
+        if (rapper.length > 0) {
+	    	if (list.length > 9) {
+	    	  alert('This is a top 10 bruv.');
+	    	  return true;
+	    	}
+
+        	addRapper(rapper);
+ 
+        	// Loop through list and generate top 10 
+        	if(list !== undefined || list.length > 0) {
+        	  generateList();
+        	}
+            $('#rapper_input').val('');
+        } else {
+           alert('Enter a rapper');
+        }
+
+	  });
+
+
+	  console.log('document ready');
+	})
+</script>
+</html>
